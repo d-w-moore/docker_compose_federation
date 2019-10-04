@@ -1,0 +1,41 @@
+FROM ubuntu:16.04
+
+ARG zone_key=TEMPORARY_ZONE_KEY
+ENV ZONE_KEY="$zone_key"
+
+ARG zone_name=tempZone
+ENV ZONE_NAME="$zone_name"
+
+ARG zone_port=1247
+ENV ZONE_PORT="$zone_port"
+
+ARG negotiation_key=32_byte_server_negotiation_key__
+ENV NEGOTIATION_KEY $negotiation_key
+
+RUN apt-get update ; apt-get install -y iproute iputils-ping netcat
+
+RUN apt-get install -y apt-transport-https wget lsb-release sudo python vim
+
+RUN wget -qO - https://packages.irods.org/irods-signing-key.asc | apt-key add - && \
+    echo "deb [arch=amd64] https://packages.irods.org/apt/ $(lsb_release -sc) main" \
+    | tee /etc/apt/sources.list.d/renci-irods.list && \
+    apt-get update && \
+    apt-get install -y irods-dev irods-server irods-database-plugin-postgres
+
+RUN apt-get install -y postgresql jq
+
+COPY db_commands.txt /tmp/db_commands.txt
+COPY install_irods.sh /
+
+RUN echo -e '#!/bin/bash\nsleep 1e9' >/run.sh; chmod +x /run.sh
+
+COPY localhost_setup_postgres.input /
+
+RUN sed -i.orig \
+  -e "s/^TEMPORARY_ZONE_KEY/${ZONE_KEY}/" \
+  -e "s/^32_byte_server_negotiation_key__/$NEGOTIATION_KEY/" \
+  -e "s/^1247/$ZONE_PORT/" \
+  -e "s/^tempZone/$ZONE_NAME/" \
+  /localhost_setup_postgres.input
+
+CMD [ "/run.sh" ]

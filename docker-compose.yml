@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+
+  irods1:
+    hostname: $host_name_A
+    build:
+      context: .
+      dockerfile: Dockerfile.icat
+      args:
+        zone_key: ${zone_key_A}
+        negotiation_key: ${negotiation_key_A}
+        zone_name: ${zone_name_A}
+        zone_port: 8880
+    networks:
+      default:
+        aliases:
+          - $host_name_A
+
+  irods2:
+    hostname: $host_name_B
+    build:
+      context: .
+      dockerfile: Dockerfile.icat
+    networks:
+      default:
+        aliases:
+          - $host_name_B
+
