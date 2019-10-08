@@ -38,4 +38,4 @@ RUN sed -i.orig \
   -e "s/^tempZone/$ZONE_NAME/" \
   /localhost_setup_postgres.input
 
-CMD [ "/run.sh" ]
+CMD [ "/bin/bash", "/run.sh" ]
