@@ -27,7 +27,7 @@ RUN apt-get install -y postgresql jq
 COPY db_commands.txt /tmp/db_commands.txt
 COPY install_irods.sh /
 
-RUN echo -e '#!/bin/bash\nsleep 1e9' >/run.sh; chmod +x /run.sh
+RUN echo 'sleep 1e9' >/run.sh; chmod +x /run.sh
 
 COPY localhost_setup_postgres.input /
 
