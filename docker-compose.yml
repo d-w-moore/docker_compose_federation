@@ -2,7 +2,7 @@ version: '3'
 
 services:
 
-  irods1:
+  irods_a:
     hostname: $host_name_A
     build:
       context: .
@@ -17,7 +17,7 @@ services:
         aliases:
           - $host_name_A
 
-  irods2:
+  irods_b:
     hostname: $host_name_B
     build:
       context: .
