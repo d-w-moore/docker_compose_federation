@@ -1,5 +1,8 @@
 FROM ubuntu:16.04
 
+ARG federate_with=""
+ENV FEDERATE_WITH="$federate_with"
+
 ARG zone_key=TEMPORARY_ZONE_KEY
 ENV ZONE_KEY="$zone_key"
 
@@ -37,5 +40,7 @@ RUN sed -i.orig \
   -e "s/^1247/$ZONE_PORT/" \
   -e "s/^tempZone/$ZONE_NAME/" \
   /localhost_setup_postgres.input
+
+RUN test -n "$FEDERATE_WITH" && echo "$FEDERATE_WITH" >/tmp/federate_with || :
 
 CMD [ "/bin/bash", "/run.sh" ]
