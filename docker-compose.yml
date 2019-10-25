@@ -28,6 +28,7 @@ services:
         negotiation_key: ${negotiation_key_B}
         zone_name: ${zone_name_B}
         zone_port: ${zone_port_B}
+        federate_with: "([zp]=$zone_port_A [hn]=$host_name_A [zn]=$zone_name_A [nk]=$negotiation_key_A [zk]=$zone_key_A)"
     networks:
       default:
         aliases:

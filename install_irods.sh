@@ -1,3 +1,4 @@
+#!/bin/bash
 service postgresql start
 while ! sudo su - postgres -c 'psql -c "\l" >/dev/null 2>&1'
 do

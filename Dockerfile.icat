@@ -29,6 +29,7 @@ RUN apt-get install -y postgresql jq
 
 COPY db_commands.txt /tmp/db_commands.txt
 COPY install_irods.sh /
+RUN  chmod +x /install_irods.sh
 
 RUN echo 'sleep 1e9' >/run.sh; chmod +x /run.sh
 
@@ -41,6 +42,9 @@ RUN sed -i.orig \
   -e "s/^tempZone/$ZONE_NAME/" \
   /localhost_setup_postgres.input
 
-RUN test -n "$FEDERATE_WITH" && echo "$FEDERATE_WITH" >/tmp/federate_with || :
+RUN test -z "$FEDERATE_WITH" || echo "$FEDERATE_WITH" >/tmp/federate_with.txt
+
+COPY setup_federation.sh /
+RUN  chmod +x /setup_federation.sh
 
 CMD [ "/bin/bash", "/run.sh" ]
