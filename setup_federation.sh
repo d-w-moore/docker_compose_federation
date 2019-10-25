@@ -8,6 +8,10 @@ su_replace() {
     mv $file{.$new,}
 }
 
+irods_env_var() {
+    su - ${2:-irods} -c "jq .'$1' ~/.irods/irods_environment.json"
+}
+
 [ -r /tmp/federate_with.txt ] || exit 1
 typeset -A P=$(cat /tmp/federate_with.txt)
 
@@ -30,18 +34,17 @@ else
 fi
 echo "\$STATUS=${STATUS}"
 
-IRODS_REMOTE_USER="$1"
+su - irods -c '$HOME/irodsctl restart'
 
-#sudo su - irods -c "iadmin mkuser bobby rodsuser"
-#sudo su - irods -c "iadmin moduser bobby password bpass"
-#sudo su - irods -c "iadmin mkzone ${P[zn]} remote ${P[hn]}:${P[zp]}"
-##sudo su - irods -c "iadmin mkzone ${P[zn]} remote ${P[hn]}:${P[zp]}"
-#---------------------------
-#for x in ${!P[*]}; do
-#    echo $((++y)) $x "${P[$x]}"
-#done; :
-##1 nk 32_byte_server_negotiation_key_B
-##2 hn icatB
-##3 zn zoneB
-##4 zk TEMP__B___ZONE_KEY
-##5 zp 8882
+su - irods -c "iadmin mkuser bobby rodsuser"
+su - irods -c "iadmin moduser bobby password bpass"
+su - irods -c "iadmin mkzone ${P[zn]} remote ${P[hn]}:${P[zp]}"
+
+IRODS_USER_NAME=$(irods_env_var irods_user_name)
+IRODS_ZONE_NAME=$(irods_env_var irods_zone_name)
+REMOTE_USER_HOME="/$IRODS_ZONE_NAME/home/$IRODS_USER_NAME/$REMOTE_USER"
+REMOTE_USER="bobby#${P[zn]}"
+
+su - irods -c "imkdir $REMOTE_USER_HOME"
+su - irods -c "ichown write $REMOTE_USER $REMOTE_USER_HOME"
+
