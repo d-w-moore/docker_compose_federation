@@ -42,8 +42,9 @@ su - irods -c "iadmin mkzone ${P[zn]} remote ${P[hn]}:${P[zp]}"
 
 IRODS_USER_NAME=$(irods_env_var irods_user_name)
 IRODS_ZONE_NAME=$(irods_env_var irods_zone_name)
-REMOTE_USER_HOME="/$IRODS_ZONE_NAME/home/$IRODS_USER_NAME/$REMOTE_USER"
 REMOTE_USER="bobby#${P[zn]}"
+REMOTE_USER_HOME="/$IRODS_ZONE_NAME/home/$IRODS_USER_NAME/$REMOTE_USER"
+
 
 su - irods -c "imkdir $REMOTE_USER_HOME"
 su - irods -c "ichown write $REMOTE_USER $REMOTE_USER_HOME"
