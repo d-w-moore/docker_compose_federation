@@ -36,14 +36,18 @@ echo "\$STATUS=${STATUS}"
 
 su - irods -c '$HOME/irodsctl restart'
 
-su - irods -c "iadmin mkuser bobby rodsuser"
-su - irods -c "iadmin moduser bobby password bpass"
 su - irods -c "iadmin mkzone ${Remote[zn]} remote ${Remote[hn]}:${Remote[zp]}"
 
-IRODS_USER_NAME=$(irods_env_var irods_user_name)
-IRODS_ZONE_NAME=$(irods_env_var irods_zone_name)
-REMOTE_USER="bobby#${Remote[zn]}"
-REMOTE_USER_HOME="/$IRODS_ZONE_NAME/home/$IRODS_USER_NAME/$REMOTE_USER"
+su - irods -c "iadmin mkuser bobby rodsuser"
+su - irods -c "iadmin moduser bobby password bpass"
 
-su - irods -c "imkdir $REMOTE_USER_HOME"
-su - irods -c "ichmod write $REMOTE_USER $REMOTE_USER_HOME"
+IRODS_LOCAL_ZONE=$(irods_env_var irods_zone_name)
+
+REMOTE_USER="bobby"
+
+if [ -n "$REMOTE_USER" -a -n "${Remote[zn]}" ]
+then
+  REMOTE_USER="$REMOTE_USER#${Remote[zn]}"
+  REMOTE_USER_HOME="/$IRODS_LOCAL_ZONE/home/$REMOTE_USER"
+  su - irods -c "iadmin mkuser $REMOTE_USER rodsuser"
+fi
