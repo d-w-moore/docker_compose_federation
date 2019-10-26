@@ -46,4 +46,4 @@ REMOTE_USER="bobby#${Remote[zn]}"
 REMOTE_USER_HOME="/$IRODS_ZONE_NAME/home/$IRODS_USER_NAME/$REMOTE_USER"
 
 su - irods -c "imkdir $REMOTE_USER_HOME"
-su - irods -c "ichown write $REMOTE_USER $REMOTE_USER_HOME"
+su - irods -c "ichmod write $REMOTE_USER $REMOTE_USER_HOME"
