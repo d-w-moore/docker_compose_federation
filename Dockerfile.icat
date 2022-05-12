@@ -1,5 +1,12 @@
 FROM ubuntu:16.04
 
+ARG irods_vsn 4.2.11-1~bionic
+ENV IRODS_VSN="${irods_vsn}"
+
+RUN echo $IRODS_VSN >/tmp/vsn
+CMD tail -f /dev/null
+
+
 ARG federate_with=""
 ENV FEDERATE_WITH="$federate_with"
 
@@ -23,7 +30,11 @@ RUN wget -qO - https://packages.irods.org/irods-signing-key.asc | apt-key add - 
     echo "deb [arch=amd64] https://packages.irods.org/apt/ $(lsb_release -sc) main" \
     | tee /etc/apt/sources.list.d/renci-irods.list && \
     apt-get update && \
-    apt-get install -y irods-dev irods-server irods-database-plugin-postgres
+    apt-get install -y irods-dev=${irods_vsn} \
+                       irods-server=${irods_vsn} \
+                       irods-icommands=${irods_vsn} \
+                       irods-runtime=${irods_vsn} \
+                       irods-database-plugin-postgres=${irods_vsn}
 
 RUN apt-get install -y postgresql jq
 

@@ -8,6 +8,7 @@ services:
       context: .
       dockerfile: Dockerfile.icat
       args:
+        irods_vsn: ${irods_version}
         zone_key: ${zone_key_A}
         negotiation_key: ${negotiation_key_A}
         zone_name: ${zone_name_A}
@@ -24,6 +25,7 @@ services:
       context: .
       dockerfile: Dockerfile.icat
       args:
+        irods_vsn: ${irods_version}
         zone_key: ${zone_key_B}
         negotiation_key: ${negotiation_key_B}
         zone_name: ${zone_name_B}
